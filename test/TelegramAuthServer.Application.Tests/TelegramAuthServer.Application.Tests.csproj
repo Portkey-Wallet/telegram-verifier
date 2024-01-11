@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>CATelegramAuthServer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TelegramServer.Application\TelegramServer.Application.csproj" />
+    <ProjectReference Include="..\TelegramAuthServer.TestBase\TelegramAuthServer.TestBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="Volo.Abp.Core" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CATelegramAuthServer.TestBase">
+      <HintPath>..\CATelegramAuthServer.Domain.Tests\bin\Debug\net7.0\CATelegramAuthServer.TestBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

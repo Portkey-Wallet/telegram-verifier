@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CATelegramServer.Auth.Dtos;
-using CATelegramServer.Auth.Provider;
-using CATelegramServer.Auth.Telegram;
-using CATelegramServer.Common;
-using CATelegramServer.Common.Dtos;
 using Microsoft.Extensions.Logging;
+using TelegramServer.Auth.Dtos;
+using TelegramServer.Auth.Provider;
+using TelegramServer.Auth.Telegram;
+using TelegramServer.Common;
+using TelegramServer.Common.Dtos;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 [RemoteService(IsEnabled = false)]
 [DisableAuditing]

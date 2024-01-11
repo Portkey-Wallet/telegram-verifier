@@ -2,7 +2,7 @@
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 [DependsOn(
     typeof(TelegramAuthServerDomainModule),

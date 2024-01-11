@@ -1,7 +1,7 @@
-﻿using CATelegramServer.Localization;
+﻿using TelegramServer.Localization;
 using Volo.Abp.AspNetCore.Mvc;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 /* Inherit your controllers from this class.
  */

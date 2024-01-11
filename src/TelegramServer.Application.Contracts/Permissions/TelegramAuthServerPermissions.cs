@@ -1,4 +1,4 @@
-﻿namespace CATelegramServer.Permissions;
+﻿namespace TelegramServer.Permissions;
 
 public static class TelegramAuthServerPermissions
 {

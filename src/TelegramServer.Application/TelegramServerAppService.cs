@@ -1,7 +1,7 @@
-﻿using CATelegramServer.Localization;
+﻿using TelegramServer.Localization;
 using Volo.Abp.Application.Services;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 /* Inherit your application services from this class.
  */

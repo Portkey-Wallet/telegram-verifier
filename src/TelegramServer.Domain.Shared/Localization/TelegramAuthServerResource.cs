@@ -1,8 +1,8 @@
 ﻿using Volo.Abp.Localization;
 
-namespace CATelegramServer.Localization;
+namespace TelegramServer.Localization;
 
-[LocalizationResourceName("CATelegramServer")]
+[LocalizationResourceName("TelegramServer")]
 public class TelegramAuthServerResource
 {
 }

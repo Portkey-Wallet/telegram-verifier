@@ -1,11 +1,11 @@
-﻿using CATelegramServer.Auth.Provider;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using TelegramServer.Auth.Provider;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 [DependsOn(
     typeof(TelegramServerApplicationModule),

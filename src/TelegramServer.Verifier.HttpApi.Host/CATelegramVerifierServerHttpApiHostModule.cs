@@ -1,11 +1,11 @@
-using CATelegramServer.Common;
-using CATelegramServer.Verifier.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using TelegramServer.Common;
+using TelegramServer.Verifier.Options;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Serilog;
@@ -15,7 +15,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.OpenIddict.Tokens;
 using Volo.Abp.Swashbuckle;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 [DependsOn(
     typeof(TelegramVerifierServerHttpApiModule),

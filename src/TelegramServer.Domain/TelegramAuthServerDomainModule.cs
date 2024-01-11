@@ -1,9 +1,9 @@
-﻿using CATelegramServer.MultiTenancy;
+﻿using TelegramServer.MultiTenancy;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 [DependsOn(
     typeof(TelegramAuthServerDomainSharedModule)

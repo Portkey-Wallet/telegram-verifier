@@ -2,7 +2,7 @@
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 public class CATelegramAuthServerTestDataSeedContributor : IDataSeedContributor, ITransientDependency
 {

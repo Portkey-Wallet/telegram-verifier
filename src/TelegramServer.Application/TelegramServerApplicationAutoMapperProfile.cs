@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 public class TelegramServerApplicationAutoMapperProfile : Profile
 {

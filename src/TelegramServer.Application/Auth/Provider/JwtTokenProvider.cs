@@ -4,15 +4,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using CATelegramServer.Auth.Dtos;
-using CATelegramServer.Auth.Options;
-using CATelegramServer.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TelegramServer.Auth.Dtos;
+using TelegramServer.Auth.Options;
+using TelegramServer.Common;
 using Volo.Abp.DependencyInjection;
 
-namespace CATelegramServer.Auth.Provider;
+namespace TelegramServer.Auth.Provider;
 
 public interface IJwtTokenProvider
 {

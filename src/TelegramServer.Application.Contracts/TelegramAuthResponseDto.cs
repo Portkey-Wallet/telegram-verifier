@@ -1,4 +1,4 @@
-namespace CATelegramServer;
+namespace TelegramServer;
 
 public class TelegramAuthResponseDto<T>
 {

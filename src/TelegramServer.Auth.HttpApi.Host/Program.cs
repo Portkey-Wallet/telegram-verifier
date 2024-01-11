@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 public class Program
 {

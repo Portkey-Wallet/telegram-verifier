@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace CATelegramServer.Common.Dtos;
+namespace TelegramServer.Common.Dtos;
 
 public class TelegramAuthDataDto
 {

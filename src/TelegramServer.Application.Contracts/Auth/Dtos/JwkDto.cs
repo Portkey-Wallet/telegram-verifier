@@ -1,4 +1,4 @@
-namespace CATelegramServer.Auth.Dtos;
+namespace TelegramServer.Auth.Dtos;
 
 public class JwkDto
 {

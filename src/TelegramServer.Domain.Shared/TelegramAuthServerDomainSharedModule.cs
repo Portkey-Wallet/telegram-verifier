@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Modularity;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 public class TelegramAuthServerDomainSharedModule : AbpModule
 {

@@ -6,7 +6,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.Uow;
 using Volo.Abp.Testing;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 /* All test classes are derived from this class, directly or indirectly.
  */

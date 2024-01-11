@@ -1,11 +1,11 @@
-using CATelegramServer.Auth.Options;
-using CATelegramServer.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using TelegramServer.Auth.Options;
+using TelegramServer.Common;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Serilog;
@@ -15,7 +15,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.OpenIddict.Tokens;
 using Volo.Abp.Swashbuckle;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 [DependsOn(
     typeof(TelegramAuthServerHttpApiModule),

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using CATelegramServer.Common.Dtos;
+using TelegramServer.Common.Dtos;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 [RemoteService(IsEnabled = false)]
 [DisableAuditing]

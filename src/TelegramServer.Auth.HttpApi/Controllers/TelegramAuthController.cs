@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
-using CATelegramServer.Auth.Dtos;
-using CATelegramServer.Auth.Telegram;
-using CATelegramServer.Common.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TelegramServer.Auth.Dtos;
+using TelegramServer.Auth.Telegram;
+using TelegramServer.Common.Dtos;
 using Volo.Abp;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 [RemoteService]
 [Area("app")]

@@ -1,11 +1,11 @@
-using CATelegramServer.Common.Dtos;
-using CATelegramServer.Verifier.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TelegramServer.Common.Dtos;
+using TelegramServer.Verifier.Options;
 using Volo.Abp;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 [RemoteService]
 [Area("app")]

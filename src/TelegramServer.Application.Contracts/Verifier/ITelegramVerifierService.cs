@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using CATelegramServer.Common.Dtos;
+using TelegramServer.Common.Dtos;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 public interface ITelegramVerifierService
 {

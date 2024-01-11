@@ -1,8 +1,8 @@
-﻿using CATelegramServer.Localization;
+﻿using TelegramServer.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
 
-namespace CATelegramServer.Permissions;
+namespace TelegramServer.Permissions;
 
 public class TelegramAuthServerPermissionDefinitionProvider : PermissionDefinitionProvider
 {

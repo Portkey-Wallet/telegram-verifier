@@ -1,4 +1,4 @@
-﻿namespace CATelegramServer.MultiTenancy;
+﻿namespace TelegramServer.MultiTenancy;
 
 public static class MultiTenancyConsts
 {

@@ -1,4 +1,4 @@
-namespace CATelegramServer.Verifier.Options;
+namespace TelegramServer.Verifier.Options;
 
 public class TelegramAuthOptions
 {

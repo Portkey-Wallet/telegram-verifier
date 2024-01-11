@@ -7,7 +7,7 @@ using Volo.Abp.Data;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 [DependsOn(
     typeof(AbpAutofacModule),

@@ -1,7 +1,7 @@
-﻿using CATelegramServer.Localization;
+﻿using TelegramServer.Localization;
 using Volo.Abp.AspNetCore.Mvc;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 /* Inherit your controllers from this class.
  */

@@ -1,14 +1,14 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CATelegramServer.Auth.Options;
-using CATelegramServer.Common;
-using CATelegramServer.Common.Dtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TelegramServer.Auth.Options;
+using TelegramServer.Common;
+using TelegramServer.Common.Dtos;
 using Volo.Abp.DependencyInjection;
 
-namespace CATelegramServer.Auth;
+namespace TelegramServer.Auth;
 
 public interface ITelegramVerifyProvider
 {

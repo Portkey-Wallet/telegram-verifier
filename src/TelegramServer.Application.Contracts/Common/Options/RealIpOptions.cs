@@ -1,4 +1,4 @@
-namespace CATelegramServer.Common;
+namespace TelegramServer.Common;
 
 public class RealIpOptions
 {

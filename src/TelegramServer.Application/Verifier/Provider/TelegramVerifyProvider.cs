@@ -5,14 +5,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AElf;
-using CATelegramServer.Common;
-using CATelegramServer.Common.Dtos;
-using CATelegramServer.Verifier.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TelegramServer.Common;
+using TelegramServer.Common.Dtos;
+using TelegramServer.Verifier.Options;
 using Volo.Abp.DependencyInjection;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 public interface ITelegramVerifyProvider
 {

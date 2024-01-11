@@ -3,7 +3,7 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Modularity;
 
-namespace CATelegramServer.Verifier;
+namespace TelegramServer.Verifier;
 
 [DependsOn(
     typeof(TelegramServerApplicationModule),

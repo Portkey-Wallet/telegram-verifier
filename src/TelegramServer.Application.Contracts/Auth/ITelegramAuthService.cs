@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using CATelegramServer.Auth.Dtos;
-using CATelegramServer.Common.Dtos;
+using TelegramServer.Auth.Dtos;
+using TelegramServer.Common.Dtos;
 
-namespace CATelegramServer.Auth.Telegram;
+namespace TelegramServer.Auth.Telegram;
 
 public interface ITelegramAuthService
 {

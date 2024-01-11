@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Threading;
 
-namespace CATelegramServer;
+namespace TelegramServer;
 
 public static class TelegramAuthServerDtoExtensions
 {

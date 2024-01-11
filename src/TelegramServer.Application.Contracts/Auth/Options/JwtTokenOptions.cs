@@ -1,4 +1,4 @@
-namespace CATelegramServer.Auth.Options;
+namespace TelegramServer.Auth.Options;
 
 public class JwtTokenOptions
 {

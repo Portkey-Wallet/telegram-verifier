@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace CATelegramServer.Common;
+namespace TelegramServer.Common;
 
 public interface IHttpService
 {

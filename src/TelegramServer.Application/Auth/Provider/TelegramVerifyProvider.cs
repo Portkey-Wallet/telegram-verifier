@@ -18,7 +18,7 @@ public interface ITelegramVerifyProvider
 public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDependency
 {
     private readonly ILogger<TelegramVerifyProvider> _logger;
-    private readonly IHttpService _httpService;
+    private readonly IHttpClientService _httpClientService;
     private readonly TelegramVerifierOptions _telegramVerifierOptions;
     private readonly string _url;
 
@@ -27,12 +27,11 @@ public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDepende
     public TelegramVerifyProvider(
         ILogger<TelegramVerifyProvider> logger,
         IOptions<TelegramVerifierOptions> telegramVerifierOptions,
-        IHttpClientFactory httpClientFactory
-    )
+        IHttpClientService httpClientService)
     {
         _logger = logger;
+        _httpClientService = httpClientService;
         _telegramVerifierOptions = telegramVerifierOptions.Value;
-        _httpService = new HttpService(telegramVerifierOptions.Value.Timeout, httpClientFactory, true);
         _url = GetUrl(VerifyUrl);
     }
 
@@ -41,7 +40,7 @@ public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDepende
         var properties = telegramAuthDataDto.GetType().GetProperties();
         var param = properties.ToDictionary(property => property.Name,
             property => property.GetValue(telegramAuthDataDto)?.ToString());
-        var telegramAuthResponseDto = await _httpService.PostResponseAsync<TelegramAuthResponseDto<bool>>(_url, param);
+        var telegramAuthResponseDto = await _httpClientService.PostAsync<TelegramAuthResponseDto<bool>>(_url, param);
 
         if (telegramAuthResponseDto == null)
         {

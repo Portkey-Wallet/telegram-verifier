@@ -7,7 +7,7 @@ using Volo.Abp.Data;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
-namespace TelegramServer;
+namespace TelegramServer.TestBase;
 
 [DependsOn(
     typeof(AbpAutofacModule),
@@ -15,7 +15,7 @@ namespace TelegramServer;
     typeof(AbpAuthorizationModule),
     typeof(TelegramAuthServerDomainModule)
     )]
-public class CATelegramAuthServerTestBaseModule : AbpModule
+public class TelegramServerTestBaseModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {

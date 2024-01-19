@@ -9,10 +9,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TelegramServer.Auth.Dtos;
 using TelegramServer.Auth.Options;
-using TelegramServer.Common;
 using Volo.Abp.DependencyInjection;
 
-namespace TelegramServer.Auth.Provider;
+namespace TelegramServer.Auth;
 
 public interface IJwtTokenProvider
 {
@@ -26,49 +25,12 @@ public class JwtTokenProvider : IJwtTokenProvider, ISingletonDependency
     private readonly JwtTokenOptions _jwtTokenOptions;
     private string _key;
 
-    public JwtTokenProvider(ILogger<JwtTokenProvider> logger, IOptionsSnapshot<JwtTokenOptions> jwtTokenOptions)
+    public JwtTokenProvider(ILogger<JwtTokenProvider> logger, IOptions<JwtTokenOptions> jwtTokenOptions,
+        IJwtTokenPrivateKeyProvider jwtTokenPrivateKeyProvider)
     {
         _logger = logger;
         _jwtTokenOptions = jwtTokenOptions.Value;
-        LoadPrivateKey();
-    }
-
-    private void LoadPrivateKey()
-    {
-        _logger.LogInformation("Wait for the input of the key....");
-        Task.Delay(1000);
-        Console.WriteLine();
-
-        Console.WriteLine("Enter the key used to generate the Jwt Token and press enter");
-        while (!InputAndCheckKey())
-        {
-        }
-
-        Console.WriteLine("\nFinished....");
-        Console.WriteLine();
-    }
-
-    private bool InputAndCheckKey()
-    {
-        try
-        {
-            Console.Write("The key is: ");
-            var key = ConsoleHelper.ReadKey();
-            key = key.Replace("\\n", "\n");
-            var privateKey = Convert.FromBase64String(key);
-            using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportPkcs8PrivateKey(privateKey, out _);
-            var rsaParameters = rsa.ExportParameters(false);
-            var n = Base64UrlEncoder.Encode(rsaParameters.Modulus);
-            var e = Base64UrlEncoder.Encode(rsaParameters.Exponent);
-            _key = key;
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Failed!");
-            return false;
-        }
+        _key = jwtTokenPrivateKeyProvider.LoadPrivateKey();
     }
 
     public Task<JwkDto> GenerateJwkAsync()

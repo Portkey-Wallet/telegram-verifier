@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TelegramServer.Auth.Dtos;
-using TelegramServer.Auth.Provider;
 using TelegramServer.Auth.Telegram;
 using TelegramServer.Common;
 using TelegramServer.Common.Dtos;

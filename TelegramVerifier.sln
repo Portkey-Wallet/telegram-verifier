@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CA9AC87F-097
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{04DBDB01-70F4-4E06-B468-8F87850B22BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramAuthServer.Application.Tests", "test\TelegramAuthServer.Application.Tests\TelegramAuthServer.Application.Tests.csproj", "{50B2631D-129C-47B3-A587-029CCD6099BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramServer.Application.Tests", "test\TelegramServer.Application.Tests\TelegramServer.Application.Tests.csproj", "{50B2631D-129C-47B3-A587-029CCD6099BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramServer.Domain.Shared", "src\TelegramServer.Domain.Shared\TelegramServer.Domain.Shared.csproj", "{42F719ED-8413-4895-B5B4-5AB56079BC66}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramServer.Application.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramServer.Auth.HttpApi", "src\TelegramServer.Auth.HttpApi\TelegramServer.Auth.HttpApi.csproj", "{4164BDF7-F527-4E85-9CE6-E3C2D7426A27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramAuthServer.TestBase", "test\TelegramAuthServer.TestBase\TelegramAuthServer.TestBase.csproj", "{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramServer.TestBase", "test\TelegramServer.TestBase\TelegramServer.TestBase.csproj", "{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Auth.HttpApi.Host", "src\TelegramServer.Auth.HttpApi.Host\TelegramServer.Auth.HttpApi.Host.csproj", "{AA8F1E23-79A7-4E82-9B76-FE470A7EC7A9}"
 EndProject

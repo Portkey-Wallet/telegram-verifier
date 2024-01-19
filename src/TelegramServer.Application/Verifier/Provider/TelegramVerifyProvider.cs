@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using AElf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TelegramServer.Common;
 using TelegramServer.Common.Dtos;
 using TelegramServer.Verifier.Options;
 using Volo.Abp.DependencyInjection;
@@ -26,52 +25,12 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     private string _token;
 
     public TelegramVerifyProvider(ILogger<TelegramVerifyProvider> logger,
-        IOptionsSnapshot<TelegramAuthOptions> telegramAuthOptions)
+        IOptions<TelegramAuthOptions> telegramAuthOptions, ITelegramTokenProvider telegramTokenProvider)
     {
         _logger = logger;
         _telegramAuthOptions = telegramAuthOptions.Value;
-        LoadToken();
+        _token = telegramTokenProvider.LoadToken();
     }
-
-    private void LoadToken()
-    {
-        _logger.LogInformation("Wait for the input of the token....");
-        Task.Delay(1000);
-        Console.WriteLine();
-
-        Console.WriteLine("Enter the telegram token and press enter");
-        while (!InputAndCheckKey())
-        {
-        }
-
-        Console.WriteLine("Finished....");
-        Console.WriteLine();
-    }
-
-    private bool InputAndCheckKey()
-    {
-        try
-        {
-            Console.Write("The token is: ");
-            var key = ConsoleHelper.ReadKey();
-            var showStr = string.Concat(key.AsSpan(0, 2), new string('*', key.Length - 4), key.AsSpan(key.Length - 2));
-            Console.WriteLine($"The input token is: {showStr}, continue with: y, re-enter: n.");
-            var confirm = Console.ReadLine();
-            if (confirm?.ToLower() != "y")
-            {
-                return false;
-            }
-
-            _token = key;
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Failed!");
-            return false;
-        }
-    }
-
 
     public async Task<bool> ValidateTelegramAuthDataAsync(TelegramAuthDataDto telegramAuthDataDto)
     {

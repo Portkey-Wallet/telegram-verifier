@@ -2,9 +2,9 @@
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 
-namespace TelegramServer;
+namespace TelegramServer.TestBase;
 
-public class CATelegramAuthServerTestDataSeedContributor : IDataSeedContributor, ITransientDependency
+public class TelegramServerTestDataSeedContributor : IDataSeedContributor, ITransientDependency
 {
     public Task SeedAsync(DataSeedContext context)
     {

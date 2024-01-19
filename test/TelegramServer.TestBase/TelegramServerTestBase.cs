@@ -6,11 +6,11 @@ using Volo.Abp.Modularity;
 using Volo.Abp.Uow;
 using Volo.Abp.Testing;
 
-namespace TelegramServer;
+namespace TelegramServer.TestBase;
 
 /* All test classes are derived from this class, directly or indirectly.
  */
-public abstract class CATelegramAuthServerTestBase<TStartupModule> : AbpIntegratedTest<TStartupModule>
+public abstract class TelegramServerTestBase<TStartupModule> : AbpIntegratedTest<TStartupModule>
     where TStartupModule : IAbpModule
 {
     protected override void SetAbpApplicationCreationOptions(AbpApplicationCreationOptions options)
@@ -43,7 +43,8 @@ public abstract class CATelegramAuthServerTestBase<TStartupModule> : AbpIntegrat
         return WithUnitOfWorkAsync(new AbpUnitOfWorkOptions(), func);
     }
 
-    protected virtual async Task<TResult> WithUnitOfWorkAsync<TResult>(AbpUnitOfWorkOptions options, Func<Task<TResult>> func)
+    protected virtual async Task<TResult> WithUnitOfWorkAsync<TResult>(AbpUnitOfWorkOptions options,
+        Func<Task<TResult>> func)
     {
         using (var scope = ServiceProvider.CreateScope())
         {

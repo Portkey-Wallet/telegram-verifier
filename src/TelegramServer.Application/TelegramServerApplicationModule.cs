@@ -7,7 +7,8 @@ namespace TelegramServer;
 
 [DependsOn(
     typeof(TelegramAuthServerDomainModule),
-    typeof(TelegramhServerApplicationContractsModule)
+    typeof(TelegramhServerApplicationContractsModule),
+    typeof(AbpAutoMapperModule)
 )]
 public class TelegramServerApplicationModule : AbpModule
 {
@@ -16,7 +17,7 @@ public class TelegramServerApplicationModule : AbpModule
         Configure<AbpAutoMapperOptions>(options => { options.AddMaps<TelegramServerApplicationModule>(); });
 
         context.Services.AddHttpClient();
-            
+
         context.Services.AddScoped<IHttpClientService, HttpClientService>();
     }
 }

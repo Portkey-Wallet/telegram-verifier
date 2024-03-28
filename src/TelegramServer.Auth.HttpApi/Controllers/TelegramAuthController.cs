@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TelegramServer.Auth.Dtos;
 using TelegramServer.Auth.Telegram;
 using TelegramServer.Common.Dtos;
@@ -40,5 +43,14 @@ public class TelegramAuthController : TelegramAuthServerController
     public async Task<TelegramAuthResponseDto<string>> VerifyAuthDataAndGenerateToken(TelegramAuthDataDto authDataDto)
     {
         return await _telegramAuthService.VerifyAuthDataAndGenerateTokenAsync(authDataDto);
+    }
+
+    [HttpPost("bot/token")]
+    public async Task<TelegramAuthResponseDto<string>> VerifyTgBotAuthDataAndGenerateToken()
+    {
+        var streamReader = new StreamReader(Request.Body);
+        var requestJson = await streamReader.ReadToEndAsync();
+        var data = JsonConvert.DeserializeObject<IDictionary<string, string>>(requestJson);
+        return await _telegramAuthService.VerifyTgBotAuthDataAndGenerateTokenAsync(data);
     }
 }

@@ -11,4 +11,5 @@ public class TelegramAuthDataDto
     [JsonProperty("last_name")] public string LastName { get; set; }
     public string Hash { get; set; }
     [JsonProperty("photo_url")] public string PhotoUrl { get; set; }
+    [JsonProperty("bot_id")] public string BotId { get; set; }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TelegramServer.Common;
 using Volo.Abp.DependencyInjection;
 
@@ -8,7 +10,7 @@ namespace TelegramServer.Verifier;
 
 public interface ITelegramTokenProvider
 {
-    string LoadToken();
+    JObject LoadToken();
 }
 
 public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependency
@@ -20,15 +22,16 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
         _logger = logger;
     }
 
-    public string LoadToken()
+    public JObject LoadToken()
     {
         _logger.LogInformation("Wait for the input of the token....");
         Task.Delay(1000);
         Console.WriteLine();
 
-        Console.WriteLine("Enter the telegram token and press enter");
-        string token = null;
-        while ((token = InputAndCheckKey()).IsNullOrWhiteSpace())
+        Console.WriteLine("Enter the telegram token in JSON format and press enter");
+        Console.WriteLine("for example: {\"portkey-robot-id\":\"portkey-robot-token\",\"rebot-id\":\"rebot-token\"}");
+        JObject token = null;
+        while ((token = InputAndCheckKey()) == null)
         {
         }
 
@@ -37,7 +40,7 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
         return token;
     }
 
-    private string InputAndCheckKey()
+    private JObject InputAndCheckKey()
     {
         try
         {
@@ -51,12 +54,34 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
                 return null;
             }
 
-            return key;
+            if (!IsValidJson(key))
+            {
+                return null;
+            }
+            return JObject.Parse(key);
         }
         catch (Exception e)
         {
             Console.WriteLine("Failed!");
             return null;
+        }
+    }
+    
+    private bool IsValidJson(string strInput)
+    {
+        if (string.IsNullOrWhiteSpace(strInput))
+        {
+            return false;
+        }
+        strInput = strInput.Trim();
+        try
+        {
+            var obj = JsonConvert.DeserializeObject(strInput);
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 }

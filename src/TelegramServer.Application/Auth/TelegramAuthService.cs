@@ -96,7 +96,8 @@ public class TelegramAuthService : TelegramServerAppService, ITelegramAuthServic
             { TelegramTokenClaimNames.FirstName, telegramAuthDataDto.FirstName },
             { TelegramTokenClaimNames.LastName, telegramAuthDataDto.LastName },
             { TelegramTokenClaimNames.Hash, telegramAuthDataDto.Hash },
-            { TelegramTokenClaimNames.ProtoUrl, telegramAuthDataDto.PhotoUrl }
+            { TelegramTokenClaimNames.ProtoUrl, telegramAuthDataDto.PhotoUrl },
+            { TelegramTokenClaimNames.BotId, telegramAuthDataDto.BotId }
         });
 
         return new TelegramAuthResponseDto<string>
@@ -138,7 +139,8 @@ public class TelegramAuthService : TelegramServerAppService, ITelegramAuthServic
             { TelegramTokenClaimNames.FirstName, result.FirstName },
             { TelegramTokenClaimNames.LastName, result.LastName },
             { TelegramTokenClaimNames.Hash, result.Hash },
-            { TelegramTokenClaimNames.ProtoUrl, result.PhotoUrl }
+            { TelegramTokenClaimNames.ProtoUrl, result.PhotoUrl },
+            { TelegramTokenClaimNames.BotId, result.BotId }
         });
 
         return new TelegramAuthResponseDto<string>

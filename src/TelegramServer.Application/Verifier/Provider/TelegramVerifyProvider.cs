@@ -56,9 +56,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         }
 
         var dataCheckString = GetDataCheckString(telegramAuthDataDto);
-        //todo delete before online
-        _logger.LogInformation("verification of the telegram information botId={0}", telegramAuthDataDto.BotId);
-        _logger.LogInformation("verification of the telegram information token in JSON format={0}", _token.ToString());
         string extractedToken = ExtractTokenFromLoadToken(telegramAuthDataDto.BotId);
         
         var localHash = GenerateTelegramDataHash.AuthDataHash(extractedToken, dataCheckString);
@@ -88,7 +85,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     private string ExtractTokenFromLoadToken(string botId)
     {
         JToken loadedToken;
-        //前端不传机器人id，默认取portkey的token
+        // if botId is null, get the default portkey's token
         if (botId.IsNullOrEmpty())
         {
             loadedToken = _token.GetValue(_defaultPortkeyRobotId);
@@ -120,8 +117,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         }
 
         var dataCheckString = GetDataCheckString(data);
-        //todo remove before online
-        _logger.LogInformation("telegram verify ValidateTelegramDataAsync data={0}", JsonConvert.SerializeObject(data));
         string botIdFromData = data.ContainsKey(CommonConstants.RequestParameterRobotId) ? data[CommonConstants.RequestParameterRobotId] : string.Empty;
         var localHash = generateTelegramHash(ExtractTokenFromLoadToken(botIdFromData), dataCheckString);
         if (!localHash.Equals(data[CommonConstants.RequestParameterNameHash]))

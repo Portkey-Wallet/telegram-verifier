@@ -39,7 +39,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         _logger = logger;
         _telegramAuthOptions = telegramAuthOptions.Value;
         _token = telegramTokenProvider.LoadToken();
-        _defaultRobotId = "bot_id";
+        _defaultRobotId = "botId";
         _defaultPortkeyRobotId = "portkey-tg-robot";
     }
 
@@ -61,7 +61,9 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         //todo delete before online
         _logger.LogInformation("verification of the telegram information botId={0}", telegramAuthDataDto.BotId);
         _logger.LogInformation("verification of the telegram information token in JSON format={0}", _token.ToString());
-        var localHash = GenerateTelegramDataHash.AuthDataHash(ExtractTokenFromLoadToken(telegramAuthDataDto.BotId), dataCheckString);
+        string extractedToken = ExtractTokenFromLoadToken(telegramAuthDataDto.BotId);
+        
+        var localHash = GenerateTelegramDataHash.AuthDataHash(extractedToken, dataCheckString);
         if (!localHash.Equals(telegramAuthDataDto.Hash))
         {
             _logger.LogError("verification of the telegram information has failed. id={0}", telegramAuthDataDto.Id);
@@ -121,7 +123,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
 
         var dataCheckString = GetDataCheckString(data);
         //todo 上线前去掉
-        _logger.LogDebug("telegram verify ValidateTelegramDataAsync data={0}", data.ToString());
+        _logger.LogInformation("telegram verify ValidateTelegramDataAsync data={0}", JsonConvert.SerializeObject(data));
         var localHash = generateTelegramHash(ExtractTokenFromLoadToken(data[_defaultRobotId]), dataCheckString);
         if (!localHash.Equals(data[CommonConstants.RequestParameterNameHash]))
         {

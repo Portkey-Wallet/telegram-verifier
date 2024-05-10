@@ -89,7 +89,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         if (botId.IsNullOrEmpty())
         {
             loadedToken = _token.GetValue(_defaultPortkeyRobotId);
-            if (loadedToken.IsNullOrEmpty())
+            if (loadedToken == null)
             {
                 _logger.LogError("load default portkey token error, robotId={0}", botId);
                 return string.Empty;
@@ -97,7 +97,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
             return loadedToken.Value<string>();
         }
         loadedToken = _token.GetValue(botId);
-        if (loadedToken.IsNullOrEmpty())
+        if (loadedToken == null)
         {
             _logger.LogError("load tg token error, robotId={0}", botId);
             return string.Empty;

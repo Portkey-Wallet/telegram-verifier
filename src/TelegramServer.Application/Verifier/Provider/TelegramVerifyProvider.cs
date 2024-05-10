@@ -30,7 +30,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     private ILogger<TelegramVerifyProvider> _logger;
     private readonly TelegramAuthOptions _telegramAuthOptions;
     private JObject _token;
-    private readonly string _defaultRobotId;
     private readonly string _defaultPortkeyRobotId;
 
     public TelegramVerifyProvider(ILogger<TelegramVerifyProvider> logger,
@@ -39,7 +38,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         _logger = logger;
         _telegramAuthOptions = telegramAuthOptions.Value;
         _token = telegramTokenProvider.LoadToken();
-        _defaultRobotId = "bot_id";
         _defaultPortkeyRobotId = "portkey-tg-robot";
     }
 
@@ -124,15 +122,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         var dataCheckString = GetDataCheckString(data);
         //todo remove before online
         _logger.LogInformation("telegram verify ValidateTelegramDataAsync data={0}", JsonConvert.SerializeObject(data));
-        string botIdFromData;
-        if (data.ContainsKey(_defaultRobotId))
-        {
-            botIdFromData = data[_defaultRobotId];
-        }
-        else
-        {
-            botIdFromData = string.Empty;
-        }
+        string botIdFromData = data.ContainsKey(CommonConstants.RequestParameterRobotId) ? data[CommonConstants.RequestParameterRobotId] : string.Empty;
         var localHash = generateTelegramHash(ExtractTokenFromLoadToken(botIdFromData), dataCheckString);
         if (!localHash.Equals(data[CommonConstants.RequestParameterNameHash]))
         {
@@ -200,7 +190,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         var sb = new StringBuilder();
         foreach (var key in sortedByKey)
         {
-            if (key == CommonConstants.RequestParameterNameHash)
+            if (key == CommonConstants.RequestParameterNameHash || CommonConstants.RequestParameterRobotId.Equals(key))
             {
                 continue;
             }

@@ -58,6 +58,9 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         }
 
         var dataCheckString = GetDataCheckString(telegramAuthDataDto);
+        //todo delete before online
+        _logger.LogInformation("verification of the telegram information botId={0}", telegramAuthDataDto.BotId);
+        _logger.LogInformation("verification of the telegram information token in JSON format={0}", _token.ToString());
         var localHash = GenerateTelegramDataHash.AuthDataHash(ExtractTokenFromLoadToken(telegramAuthDataDto.BotId), dataCheckString);
         if (!localHash.Equals(telegramAuthDataDto.Hash))
         {

@@ -35,7 +35,6 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
         {
         }
 
-        Console.WriteLine("Your input token in JSON format: {0}", token.ToString());
         Console.WriteLine("Finished....");
         Console.WriteLine();
         return token;

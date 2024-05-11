@@ -1,28 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using AElf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using TelegramServer.Common;
 using TelegramServer.Common.Dtos;
 using TelegramServer.Verifier.Options;
+using TelegramServer.Verifier.Provider;
 using Volo.Abp.DependencyInjection;
 
 namespace TelegramServer.Verifier;
 
 public interface ITelegramVerifyProvider
 {
+    Task<string> GenerateHashAsync(TelegramAuthDataDto telegramAuthDataDto);
     Task<bool> ValidateTelegramAuthDataAsync(TelegramAuthDataDto telegramAuthDataDto);
+
+    Task<bool> ValidateTelegramDataAsync(IDictionary<string, string> data,
+        Func<string, string, string> generateTelegramHash);
 }
 
 public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvider
 {
     private ILogger<TelegramVerifyProvider> _logger;
     private readonly TelegramAuthOptions _telegramAuthOptions;
-    private string _token;
+    private JObject _token;
+    private readonly string _defaultPortkeyRobotId;
 
     public TelegramVerifyProvider(ILogger<TelegramVerifyProvider> logger,
         IOptions<TelegramAuthOptions> telegramAuthOptions, ITelegramTokenProvider telegramTokenProvider)
@@ -30,22 +38,31 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         _logger = logger;
         _telegramAuthOptions = telegramAuthOptions.Value;
         _token = telegramTokenProvider.LoadToken();
+        _defaultPortkeyRobotId = "portkey-tg-robot";
     }
 
-    public async Task<bool> ValidateTelegramAuthDataAsync(TelegramAuthDataDto telegramAuthDataDto)
+    public Task<string> GenerateHashAsync(TelegramAuthDataDto telegramAuthDataDto)
+    {
+        var dataCheckString = GetDataCheckString(telegramAuthDataDto);
+        return Task.FromResult(GenerateTelegramDataHash.AuthDataHash(ExtractTokenFromLoadToken(telegramAuthDataDto.BotId), dataCheckString));
+    }
+
+    public Task<bool> ValidateTelegramAuthDataAsync(TelegramAuthDataDto telegramAuthDataDto)
     {
         if (telegramAuthDataDto.Hash.IsNullOrWhiteSpace() || telegramAuthDataDto.Id.IsNullOrWhiteSpace())
         {
             _logger.LogError("hash/id parameter in the telegram callback is null. id={0}", telegramAuthDataDto.Id);
-            return false;
+            return Task.FromResult(false);
         }
 
         var dataCheckString = GetDataCheckString(telegramAuthDataDto);
-        var localHash = await GenerateTelegramHashAsync(_token, dataCheckString);
+        string extractedToken = ExtractTokenFromLoadToken(telegramAuthDataDto.BotId);
+        
+        var localHash = GenerateTelegramDataHash.AuthDataHash(extractedToken, dataCheckString);
         if (!localHash.Equals(telegramAuthDataDto.Hash))
         {
             _logger.LogError("verification of the telegram information has failed. id={0}", telegramAuthDataDto.Id);
-            return false;
+            return Task.FromResult(false);
         }
 
         if (!telegramAuthDataDto.AuthDate.IsNullOrWhiteSpace())
@@ -58,16 +75,77 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
             {
                 _logger.LogError("verification of the telegram information has failed, login timeout. id={0}",
                     telegramAuthDataDto.Id);
-                return false;
+                return Task.FromResult(false);
             }
         }
 
-        return true;
+        return Task.FromResult(true);
+    }
+
+    private string ExtractTokenFromLoadToken(string botId)
+    {
+        JToken loadedToken;
+        // if botId is null, get the default portkey's token
+        if (botId.IsNullOrEmpty())
+        {
+            loadedToken = _token.GetValue(_defaultPortkeyRobotId);
+            if (loadedToken == null)
+            {
+                _logger.LogError("load default portkey token error, robotId={0}", botId);
+                return string.Empty;
+            }
+            return loadedToken.Value<string>();
+        }
+        loadedToken = _token.GetValue(botId);
+        if (loadedToken == null)
+        {
+            _logger.LogError("load tg token error, robotId={0}", botId);
+            return string.Empty;
+        }
+        return loadedToken.Value<string>();
+    }
+
+    public Task<bool> ValidateTelegramDataAsync(IDictionary<string, string> data,
+        Func<string, string, string> generateTelegramHash)
+    {
+        if (data.IsNullOrEmpty() || !data.ContainsKey(CommonConstants.RequestParameterNameHash) ||
+            data[CommonConstants.RequestParameterNameHash].IsNullOrWhiteSpace())
+        {
+            _logger.LogError("telegramData or telegramData[hash] is empty");
+            return Task.FromResult(false);
+            ;
+        }
+
+        var dataCheckString = GetDataCheckString(data);
+        string botIdFromData = data.ContainsKey(CommonConstants.RequestParameterRobotId) ? data[CommonConstants.RequestParameterRobotId] : string.Empty;
+        var localHash = generateTelegramHash(ExtractTokenFromLoadToken(botIdFromData), dataCheckString);
+        if (!localHash.Equals(data[CommonConstants.RequestParameterNameHash]))
+        {
+            _logger.LogDebug("verification of the telegram information has failed. data={0}",
+                JsonConvert.SerializeObject(data));
+            return Task.FromResult(false);
+        }
+
+        if (data.ContainsKey(CommonConstants.RequestParameterNameAuthDate) &&
+            !data[CommonConstants.RequestParameterNameAuthDate].IsNullOrWhiteSpace())
+        {
+            var expiredUnixTimestamp = (long)DateTime.UtcNow.AddSeconds(-_telegramAuthOptions.Expire)
+                .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var authDate = long.Parse(data[CommonConstants.RequestParameterNameAuthDate]);
+            if (authDate < expiredUnixTimestamp)
+            {
+                _logger.LogDebug("verification of the telegram information has failed, login timeout. data={0}",
+                    JsonConvert.SerializeObject(data));
+                return Task.FromResult(false);
+            }
+        }
+
+        return Task.FromResult(true);
     }
 
     private static string GetDataCheckString(TelegramAuthDataDto telegramAuthDataDto)
     {
-        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+        var keyValuePairs = new Dictionary<string, string>();
         if (!telegramAuthDataDto.Id.IsNullOrWhiteSpace())
         {
             keyValuePairs.Add("id", telegramAuthDataDto.Id);
@@ -98,25 +176,24 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
             keyValuePairs.Add("photo_url", telegramAuthDataDto.PhotoUrl);
         }
 
-        var sortedByKey = keyValuePairs.Keys.OrderBy(k => k);
+        return GetDataCheckString(keyValuePairs);
+    }
+
+    private static string GetDataCheckString(IDictionary<string, string> data)
+    {
+        var sortedByKey = data.Keys.OrderBy(k => k);
         var sb = new StringBuilder();
         foreach (var key in sortedByKey)
         {
-            sb.AppendLine($"{key}={keyValuePairs[key]}");
+            if (key == CommonConstants.RequestParameterNameHash || CommonConstants.RequestParameterRobotId.Equals(key))
+            {
+                continue;
+            }
+
+            sb.AppendLine($"{key}={data[key]}");
         }
 
-        sb.Length = sb.Length - 1;
+        sb.Length -= 1;
         return sb.ToString();
-    }
-
-    private static Task<string> GenerateTelegramHashAsync(string token, string dataCheckString)
-    {
-        var tokenBytes = Encoding.UTF8.GetBytes(token);
-        var dataCheckStringBytes = Encoding.UTF8.GetBytes(dataCheckString);
-        var computeFrom = HashHelper.ComputeFrom(tokenBytes).ToByteArray();
-
-        using var hmac = new HMACSHA256(computeFrom);
-        var hashBytes = hmac.ComputeHash(dataCheckStringBytes);
-        return Task.FromResult(hashBytes.ToHex());
     }
 }

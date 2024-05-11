@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Options;
 using Moq;
+using Newtonsoft.Json.Linq;
 using TelegramServer.Common.Dtos;
 using TelegramServer.Verifier;
 using TelegramServer.Verifier.Options;
@@ -24,7 +25,7 @@ public partial class TelegramVerifierServiceTests
     private static ITelegramTokenProvider MockTelegramTokenProvider()
     {
         var mock = new Mock<ITelegramTokenProvider>();
-        mock.Setup(o => o.LoadToken()).Returns("6741218435:AAEMuSu3u0y4FXVqGPuW1F5RoQ5kudW_0Xs");
+        mock.Setup(o => o.LoadToken()).Returns(JObject.Parse("{\"portkey-tg-robot\":\"6741218435:AAEMuSu3u0y4FXVqGPuW1F5RoQ5kudW_0Xs\"}"));
         return mock.Object;
     }
 

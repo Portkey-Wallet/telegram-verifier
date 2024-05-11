@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Moq;
-using NSubstitute;
+using Newtonsoft.Json.Serialization;
 using TelegramServer.Auth;
 using TelegramServer.Auth.Options;
 using TelegramServer.Common;
@@ -37,8 +37,10 @@ public partial class TelegramAuthServiceTest
     private IHttpClientService MockHttpClientService()
     {
         var mock = new Mock<IHttpClientService>();
-        mock.Setup(o => o.PostAsync<TelegramAuthResponseDto<bool>>(It.IsAny<string>(), It.IsAny<object>()))
-            .ReturnsAsync((string url, object param) =>
+        mock.Setup(o =>
+                o.PostAsync<TelegramAuthResponseDto<bool>>(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<int>(),
+                    It.IsAny<IContractResolver>()))
+            .ReturnsAsync((string url, object param, int timeout) =>
             {
                 if (((Dictionary<string, string>)param)["Hash"].IsNullOrWhiteSpace())
                 {

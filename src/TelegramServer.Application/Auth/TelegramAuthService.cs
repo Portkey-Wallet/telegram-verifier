@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using TelegramServer.Auth.Dtos;
 using TelegramServer.Auth.Telegram;
@@ -95,7 +96,51 @@ public class TelegramAuthService : TelegramServerAppService, ITelegramAuthServic
             { TelegramTokenClaimNames.FirstName, telegramAuthDataDto.FirstName },
             { TelegramTokenClaimNames.LastName, telegramAuthDataDto.LastName },
             { TelegramTokenClaimNames.Hash, telegramAuthDataDto.Hash },
-            { TelegramTokenClaimNames.ProtoUrl, telegramAuthDataDto.PhotoUrl }
+            { TelegramTokenClaimNames.ProtoUrl, telegramAuthDataDto.PhotoUrl },
+            { TelegramTokenClaimNames.BotId, telegramAuthDataDto.BotId }
+        });
+
+        return new TelegramAuthResponseDto<string>
+        {
+            Success = true,
+            Data = token
+        };
+    }
+
+    public async Task<TelegramAuthResponseDto<string>> VerifyTgBotAuthDataAndGenerateTokenAsync(
+        [CanBeNull] IDictionary<string, string> data)
+    {
+        if (data.IsNullOrEmpty())
+        {
+            _logger.LogError("dataCheck is null");
+            return new TelegramAuthResponseDto<string>
+            {
+                Success = false,
+                Message = "Invalid Telegram Login Information",
+            };
+        }
+
+        var result = await _telegramVerifyProvider.VerifyTelegramBotAuthDataAsync(data);
+        if (result == null)
+        {
+            _logger.LogError("Verify telegram bot auth data return null");
+            return new TelegramAuthResponseDto<string>
+            {
+                Success = false,
+                Message = "Invalid Telegram Login Information",
+            };
+        }
+
+        var token = await _jwtTokenProvider.GenerateTokenAsync(new Dictionary<string, string>()
+        {
+            { TelegramTokenClaimNames.UserId, result.Id },
+            { TelegramTokenClaimNames.UserName, result.UserName },
+            { TelegramTokenClaimNames.AuthDate, result.AuthDate },
+            { TelegramTokenClaimNames.FirstName, result.FirstName },
+            { TelegramTokenClaimNames.LastName, result.LastName },
+            { TelegramTokenClaimNames.Hash, result.Hash },
+            { TelegramTokenClaimNames.ProtoUrl, result.PhotoUrl },
+            { TelegramTokenClaimNames.BotId, result.BotId }
         });
 
         return new TelegramAuthResponseDto<string>

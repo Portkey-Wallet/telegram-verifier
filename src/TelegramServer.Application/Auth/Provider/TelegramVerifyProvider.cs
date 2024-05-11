@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,6 +13,7 @@ namespace TelegramServer.Auth;
 public interface ITelegramVerifyProvider
 {
     Task<bool> VerifyTelegramAuthDataAsync(TelegramAuthDataDto telegramAuthDataDto);
+    Task<TelegramAuthDataDto> VerifyTelegramBotAuthDataAsync(IDictionary<string, string> data);
 }
 
 public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDependency
@@ -21,8 +22,10 @@ public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDepende
     private readonly IHttpClientService _httpClientService;
     private readonly TelegramVerifierOptions _telegramVerifierOptions;
     private readonly string _url;
+    private readonly string _botVerifyUrl;
 
     private const string VerifyUrl = "api/app/auth/verify";
+    private const string BotVerifyUrl = "api/app/auth/bot/verify";
 
     public TelegramVerifyProvider(
         ILogger<TelegramVerifyProvider> logger,
@@ -33,6 +36,7 @@ public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDepende
         _httpClientService = httpClientService;
         _telegramVerifierOptions = telegramVerifierOptions.Value;
         _url = GetUrl(VerifyUrl);
+        _botVerifyUrl = GetUrl(BotVerifyUrl);
     }
 
     public async Task<bool> VerifyTelegramAuthDataAsync(TelegramAuthDataDto telegramAuthDataDto)
@@ -54,6 +58,26 @@ public class TelegramVerifyProvider : ITelegramVerifyProvider, ISingletonDepende
         }
 
         return telegramAuthResponseDto.Success;
+    }
+
+    public async Task<TelegramAuthDataDto> VerifyTelegramBotAuthDataAsync(IDictionary<string, string> data)
+    {
+        var telegramAuthResponseDto =
+            await _httpClientService.PostAsync<TelegramAuthResponseDto<TelegramAuthDataDto>>(_botVerifyUrl, data,
+                _telegramVerifierOptions.Timeout, new IgnoreJsonPropertyContractResolver());
+
+        if (telegramAuthResponseDto == null)
+        {
+            _logger.LogError("verifier interface return null");
+            return null;
+        }
+
+        if (!telegramAuthResponseDto.Success)
+        {
+            _logger.LogError("Validation failed: {0}", telegramAuthResponseDto.Message);
+        }
+
+        return telegramAuthResponseDto.Data;
     }
 
     private string GetUrl(string url)

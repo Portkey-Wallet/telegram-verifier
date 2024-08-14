@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using TelegramServer.Common.Dtos;
+using TelegramServer.Verifier.Dto;
 using TelegramServer.Verifier.Options;
 using Volo.Abp;
 
@@ -37,5 +38,12 @@ public class TelegramVerifierController : TelegramVerifierServerController
         var requestJson = await streamReader.ReadToEndAsync();
         var data = JsonConvert.DeserializeObject<IDictionary<string, string>>(requestJson);
         return await _telegramVerifierService.VerifyTgBotDataAndGenerateAuthDataAsync(data);
+    }
+    
+    [HttpPost("bot/register")]
+    public async Task<TelegramAuthResponseDto<TelegramBotDto>> RegisterTelegramBot([FromHeader] string applicant, [FromBody] RegisterTelegramBotDto registerTelegramBotDto)
+    {
+        _logger.LogInformation(".....RegisterTelegramBot Applicant is:{0}", applicant);
+        return await _telegramVerifierService.RegisterTelegramBot(registerTelegramBotDto.Secret);
     }
 }

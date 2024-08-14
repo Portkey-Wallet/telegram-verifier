@@ -1,6 +1,6 @@
 namespace TelegramServer.Verifier.Dto;
 
-public class TelegramBotDto
+public class TelegramBotInfoDto
 {
     public string BotId { get; set; }
     public string PlaintextSecret { get; set; }

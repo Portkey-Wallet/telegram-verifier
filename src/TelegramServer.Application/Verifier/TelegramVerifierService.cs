@@ -85,11 +85,11 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
         return telegramAuthDataDto;
     }
 
-    public async Task<TelegramAuthResponseDto<TelegramBotDto>> RegisterTelegramBot(string secret)
+    public async Task<TelegramAuthResponseDto<TelegramBotInfoDto>> RegisterTelegramBot(string secret)
     {
         if (secret.IsNullOrEmpty() || secret.Contains(Colon))
         {
-            return new TelegramAuthResponseDto<TelegramBotDto>()
+            return new TelegramAuthResponseDto<TelegramBotInfoDto>()
             {
                 Success = false,
                 Message = "please input valid secret~"
@@ -99,7 +99,7 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
         var botSecret = secret.Split(Colon);
         if (botSecret.Length != 2)
         {
-            return new TelegramAuthResponseDto<TelegramBotDto>()
+            return new TelegramAuthResponseDto<TelegramBotInfoDto>()
             {
                 Success = false,
                 Message = "your secret format is invalid~"
@@ -117,10 +117,10 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
         });
 
         var telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
-        return new TelegramAuthResponseDto<TelegramBotDto>()
+        return new TelegramAuthResponseDto<TelegramBotInfoDto>()
         {
             Success = true,
-            Data = new TelegramBotDto()
+            Data = new TelegramBotInfoDto()
             {
                 BotId = telegramBotIndex.BotId,
                 PlaintextSecret = _telegramVerifyProvider.DecryptSecret(telegramBotIndex.Secret, telegramBotIndex.CreateTime.ToString(), telegramBotIndex.BotId),

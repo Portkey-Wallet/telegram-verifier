@@ -41,9 +41,8 @@ public class TelegramVerifierController : TelegramVerifierServerController
     }
     
     [HttpPost("bot/register")]
-    public async Task<TelegramAuthResponseDto<TelegramBotDto>> RegisterTelegramBot([FromHeader] string applicant, [FromBody] RegisterTelegramBotDto registerTelegramBotDto)
+    public async Task<TelegramAuthResponseDto<TelegramBotInfoDto>> RegisterTelegramBot([FromBody] RegisterTelegramBotDto registerTelegramBotDto)
     {
-        _logger.LogInformation(".....RegisterTelegramBot Applicant is:{0}", applicant);
         return await _telegramVerifierService.RegisterTelegramBot(registerTelegramBotDto.Secret);
     }
 }

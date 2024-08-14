@@ -12,5 +12,5 @@ public interface ITelegramVerifierService
     Task<TelegramAuthResponseDto<TelegramAuthDataDto>> VerifyTgBotDataAndGenerateAuthDataAsync(
         IDictionary<string, string> data);
 
-    Task<TelegramAuthResponseDto<TelegramBotDto>> RegisterTelegramBot(string secret);
+    Task<TelegramAuthResponseDto<TelegramBotInfoDto>> RegisterTelegramBot(string secret);
 }

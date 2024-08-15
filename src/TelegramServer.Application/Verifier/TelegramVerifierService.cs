@@ -117,6 +117,13 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
         });
 
         var telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        int i = 0;
+        while (telegramBotIndex == null && i < 10)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            i++;
+            telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        }
         return new TelegramAuthResponseDto<TelegramBotInfoDto>()
         {
             Success = true,

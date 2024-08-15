@@ -242,13 +242,17 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     public string EncryptSecret(string plainText, string currentTimestamp, string botId)
     {
         GetKeyAndIv(currentTimestamp, botId, out var key, out var iv);
-        return AesEncryptionProvider.Encrypt(plainText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv));
+        var encrypt = AesEncryptionProvider.Encrypt(plainText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv));
+        _logger.LogInformation("EncryptSecret plainText:{0} currentTimestamp:{1} botId:{2}", plainText, currentTimestamp, botId);
+        return encrypt;
     }
     
     public string DecryptSecret(string secret, string currentTimestamp, string botId)
     {
         GetKeyAndIv(currentTimestamp, botId, out var key, out var iv);
-        return AesEncryptionProvider.Decrypt(secret, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv));
+        var decrypt = AesEncryptionProvider.Decrypt(secret, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv));
+        _logger.LogInformation("DecryptSecret secret:{0} currentTimestamp:{1} botId:{2}", secret, currentTimestamp, botId);
+        return decrypt;
     }
 
     private static void GetKeyAndIv(string currentTimestamp, string botId, out string key, out string iv)

@@ -87,7 +87,7 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
 
     public async Task<TelegramAuthResponseDto<TelegramBotInfoDto>> RegisterTelegramBot(string secret)
     {
-        if (secret.IsNullOrEmpty() || secret.Contains(Colon))
+        if (secret.IsNullOrEmpty() || !secret.Contains(Colon))
         {
             return new TelegramAuthResponseDto<TelegramBotInfoDto>()
             {

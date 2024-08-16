@@ -111,8 +111,8 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
         {
             Id = new Guid(),
             BotId = botSecret[0],
-            PlaintextSecret = botSecret[1],
-            Secret = _telegramVerifyProvider.EncryptSecret(botSecret[1], currentTimestamp.ToString(), botSecret[0]),
+            PlaintextSecret = secret,
+            Secret = _telegramVerifyProvider.EncryptSecret(secret, currentTimestamp.ToString(), botSecret[0]),
             CreateTime = currentTimestamp
         });
 

@@ -159,8 +159,12 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         }
 
         var dataCheckString = GetDataCheckString(data);
-        string botIdFromData = data.ContainsKey(CommonConstants.RequestParameterRobotId) ? data[CommonConstants.RequestParameterRobotId] : string.Empty;
-        var localHash = generateTelegramHash(await ExtractTokenFromLoadToken(botIdFromData), dataCheckString);
+        _logger.LogInformation("ValidateTelegramData dataCheckString:{0} data:{1}", dataCheckString, JsonConvert.SerializeObject(data));
+        var botIdFromData = data.ContainsKey(CommonConstants.RequestParameterRobotId) ? data[CommonConstants.RequestParameterRobotId] : string.Empty;
+        var botToken = await ExtractTokenFromLoadToken(botIdFromData);
+        var localHash = generateTelegramHash(botToken, dataCheckString);
+        _logger.LogInformation("ValidateTelegramData localHash:{0} hashFromData:{1} botId:{2} botToken:{3}",
+            localHash, data[CommonConstants.RequestParameterNameHash], botIdFromData, botToken);
         if (!localHash.Equals(data[CommonConstants.RequestParameterNameHash]))
         {
             _logger.LogDebug("verification of the telegram information has failed. data={0}",

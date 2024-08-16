@@ -95,7 +95,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
 
     private async Task<string> ExtractTokenFromLoadToken(string botId)
     {
-        _logger.LogInformation("ExtractTokenFromLoadToken botId:{0}", botId);
         JToken loadedToken;
         // if botId is null, get the default portkey's token
         if (botId.IsNullOrEmpty())
@@ -109,12 +108,9 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
             return loadedToken.Value<string>();
         }
         loadedToken = _token.GetValue(botId);
-        _logger.LogInformation("ExtractTokenFromConfig botId:{0} loadedToken:{1}",
-            botId, loadedToken?.Value<string>());
         if (loadedToken == null)
         {
             var tokenFromEs = await GetTelegramBotTokenByBotId(botId);
-            _logger.LogInformation("ExtractTokenFromEs botId:{0} tokenFromEs:{1}",botId, tokenFromEs);
             if (!tokenFromEs.IsNullOrEmpty())
             {
                 return tokenFromEs;
@@ -155,16 +151,12 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
         {
             _logger.LogError("telegramData or telegramData[hash] is empty");
             return false;
-            ;
         }
 
         var dataCheckString = GetDataCheckString(data);
-        _logger.LogInformation("ValidateTelegramData dataCheckString:{0} data:{1}", dataCheckString, JsonConvert.SerializeObject(data));
-        var botIdFromData = data.ContainsKey(CommonConstants.RequestParameterRobotId) ? data[CommonConstants.RequestParameterRobotId] : string.Empty;
+        var botIdFromData = data.TryGetValue(CommonConstants.RequestParameterRobotId, out var value) ? value : string.Empty;
         var botToken = await ExtractTokenFromLoadToken(botIdFromData);
         var localHash = generateTelegramHash(botToken, dataCheckString);
-        _logger.LogInformation("ValidateTelegramData localHash:{0} hashFromData:{1} botId:{2} botToken:{3}",
-            localHash, data[CommonConstants.RequestParameterNameHash], botIdFromData, botToken);
         if (!localHash.Equals(data[CommonConstants.RequestParameterNameHash]))
         {
             _logger.LogDebug("verification of the telegram information has failed. data={0}",
@@ -247,7 +239,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     {
         GetKeyAndIv(currentTimestamp, botId, out var key, out var iv);
         var encrypt = AesEncryptionProvider.Encrypt(plainText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv));
-        _logger.LogInformation("EncryptSecret plainText:{0} currentTimestamp:{1} botId:{2}", plainText, currentTimestamp, botId);
         return encrypt;
     }
     
@@ -255,7 +246,6 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     {
         GetKeyAndIv(currentTimestamp, botId, out var key, out var iv);
         var decrypt = AesEncryptionProvider.Decrypt(secret, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(iv));
-        _logger.LogInformation("DecryptSecret secret:{0} currentTimestamp:{1} botId:{2}", secret, currentTimestamp, botId);
         return decrypt;
     }
 

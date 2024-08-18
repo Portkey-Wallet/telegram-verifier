@@ -105,24 +105,38 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
                 Message = "your secret format is invalid~"
             };
         }
-        
+
         var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        await _telegramBotRepository.AddAsync(new TelegramBotIndex()
+        var telegramBotIndexToSave = new TelegramBotIndex()
         {
             Id = new Guid(),
             BotId = botSecret[0],
-            PlaintextSecret = secret,
             Secret = _telegramVerifyProvider.EncryptSecret(secret, currentTimestamp.ToString(), botSecret[0]),
             CreateTime = currentTimestamp
-        });
+        };
+        await _telegramBotRepository.AddAsync(telegramBotIndexToSave);
 
         var telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
-        int i = 0;
-        while (telegramBotIndex == null && i < 10)
+        var i = 0;
+        while (telegramBotIndex == null && i < 3)
         {
             await Task.Delay(TimeSpan.FromSeconds(1));
             i++;
             telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        }
+        if (telegramBotIndex == null)
+        {
+            await _telegramBotRepository.AddOrUpdateAsync(telegramBotIndexToSave);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        }
+        if (telegramBotIndex == null)
+        {
+            return new TelegramAuthResponseDto<TelegramBotInfoDto>()
+            {
+                Success = false,
+                Message = "save Telegram bot error, please have a try later~"
+            };
         }
         return new TelegramAuthResponseDto<TelegramBotInfoDto>()
         {
@@ -130,7 +144,6 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
             Data = new TelegramBotInfoDto()
             {
                 BotId = telegramBotIndex.BotId,
-                PlaintextSecret = _telegramVerifyProvider.DecryptSecret(telegramBotIndex.Secret, telegramBotIndex.CreateTime.ToString(), telegramBotIndex.BotId),
                 Secret = telegramBotIndex.Secret
             }
         };

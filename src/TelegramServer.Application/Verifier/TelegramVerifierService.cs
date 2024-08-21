@@ -1,8 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AElf.Indexing.Elasticsearch;
+using Nest;
 using Newtonsoft.Json;
 using TelegramServer.Common;
 using TelegramServer.Common.Dtos;
+using TelegramServer.Entities.Es;
+using TelegramServer.Verifier.Dto;
 using TelegramServer.Verifier.Provider;
 using Volo.Abp;
 using Volo.Abp.Auditing;
@@ -14,13 +20,17 @@ namespace TelegramServer.Verifier;
 [DisableAuditing]
 public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifierService
 {
+    private const string Colon = ":";
     private readonly ITelegramVerifyProvider _telegramVerifyProvider;
     private readonly IObjectMapper _objectMapper;
+    private readonly INESTRepository<TelegramBotIndex, Guid> _telegramBotRepository;
 
-    public TelegramVerifierService(ITelegramVerifyProvider telegramVerifyProvider, IObjectMapper objectMapper)
+    public TelegramVerifierService(ITelegramVerifyProvider telegramVerifyProvider, IObjectMapper objectMapper,
+        INESTRepository<TelegramBotIndex, Guid> telegramBotRepository)
     {
         _telegramVerifyProvider = telegramVerifyProvider;
         _objectMapper = objectMapper;
+        _telegramBotRepository = telegramBotRepository;
     }
 
     public async Task<TelegramAuthResponseDto<bool>> VerifyTelegramAuthDataAsync(
@@ -73,5 +83,82 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
             ? data[CommonConstants.RequestParameterNameAuthDate]
             : null;
         return telegramAuthDataDto;
+    }
+
+    public async Task<TelegramAuthResponseDto<TelegramBotInfoDto>> RegisterTelegramBot(string secret)
+    {
+        if (secret.IsNullOrEmpty() || !secret.Contains(Colon))
+        {
+            return new TelegramAuthResponseDto<TelegramBotInfoDto>()
+            {
+                Success = false,
+                Message = "please input valid secret~"
+            };
+        }
+
+        var botSecret = secret.Split(Colon);
+        if (botSecret.Length != 2)
+        {
+            return new TelegramAuthResponseDto<TelegramBotInfoDto>()
+            {
+                Success = false,
+                Message = "your secret format is invalid~"
+            };
+        }
+
+        var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var telegramBotIndexToSave = new TelegramBotIndex()
+        {
+            Id = new Guid(),
+            BotId = botSecret[0],
+            Secret = _telegramVerifyProvider.EncryptSecret(secret, currentTimestamp.ToString(), botSecret[0]),
+            CreateTime = currentTimestamp
+        };
+        await _telegramBotRepository.AddAsync(telegramBotIndexToSave);
+
+        var telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        var i = 0;
+        while (telegramBotIndex == null && i < 3)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            i++;
+            telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        }
+        if (telegramBotIndex == null)
+        {
+            await _telegramBotRepository.AddOrUpdateAsync(telegramBotIndexToSave);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            telegramBotIndex = await GetTelegramBotIndex(botSecret[0]);
+        }
+        if (telegramBotIndex == null)
+        {
+            return new TelegramAuthResponseDto<TelegramBotInfoDto>()
+            {
+                Success = false,
+                Message = "save Telegram bot error, please have a try later~"
+            };
+        }
+        return new TelegramAuthResponseDto<TelegramBotInfoDto>()
+        {
+            Success = true,
+            Data = new TelegramBotInfoDto()
+            {
+                BotId = telegramBotIndex.BotId,
+                Secret = telegramBotIndex.Secret
+            }
+        };
+    }
+    
+    private async Task<TelegramBotIndex> GetTelegramBotIndex(string botId)
+    {
+        var mustQuery = new List<Func<QueryContainerDescriptor<TelegramBotIndex>, QueryContainer>>
+        {
+            q => q.Term(i => i.Field(f => f.BotId).Value(botId))
+        };
+        QueryContainer Filter(QueryContainerDescriptor<TelegramBotIndex> f) =>
+            f.Bool(b => b.Must(mustQuery));
+
+        var telegramBotIndic = await _telegramBotRepository.GetListAsync(Filter);
+        return telegramBotIndic.Item2.FirstOrDefault(bot => bot.BotId.Equals(botId));
     }
 }

@@ -1,4 +1,6 @@
-﻿using TelegramServer.MultiTenancy;
+﻿using AElf.Indexing.Elasticsearch;
+using AElf.Indexing.Elasticsearch.Options;
+using TelegramServer.MultiTenancy;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
@@ -6,12 +8,14 @@ using Volo.Abp.MultiTenancy;
 namespace TelegramServer;
 
 [DependsOn(
-    typeof(TelegramAuthServerDomainSharedModule)
+    typeof(TelegramAuthServerDomainSharedModule),
+    typeof(AElfIndexingElasticsearchModule)
 )]
 public class TelegramAuthServerDomainModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        ConfigureEsIndexCreation();
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Languages.Add(new LanguageInfo("ar", "ar", "العربية", "ae"));
@@ -38,5 +42,10 @@ public class TelegramAuthServerDomainModule : AbpModule
 #if DEBUG
         //context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
 #endif
+    }
+    
+    private void ConfigureEsIndexCreation()
+    {
+        Configure<IndexCreateOption>(x => { x.AddModule(typeof(TelegramAuthServerDomainModule)); });
     }
 }

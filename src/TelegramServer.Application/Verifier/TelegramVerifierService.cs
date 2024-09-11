@@ -109,7 +109,7 @@ public class TelegramVerifierService : TelegramServerAppService, ITelegramVerifi
         var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var telegramBotIndexToSave = new TelegramBotIndex()
         {
-            Id = new Guid(),
+            Id = Guid.NewGuid(),
             BotId = botSecret[0],
             Secret = _telegramVerifyProvider.EncryptSecret(secret, currentTimestamp.ToString(), botSecret[0]),
             CreateTime = currentTimestamp

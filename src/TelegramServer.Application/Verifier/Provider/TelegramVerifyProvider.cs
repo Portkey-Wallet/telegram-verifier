@@ -135,6 +135,7 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
             f.Bool(b => b.Must(mustQuery));
 
         var telegramBotIndic = await _telegramBotRepository.GetListAsync(Filter);
+        _logger.LogDebug("GetTelegramBotTokenByBotId botId:{0} result:{1}", botId, JsonConvert.SerializeObject(telegramBotIndic));
         if (telegramBotIndic == null || telegramBotIndic.Item2.IsNullOrEmpty())
         {
             return null;

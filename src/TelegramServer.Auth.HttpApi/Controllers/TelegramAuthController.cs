@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TelegramServer.Auth.Dtos;
-using TelegramServer.Auth.Telegram;
 using TelegramServer.Common.Dtos;
 using Volo.Abp;
 

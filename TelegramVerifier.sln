@@ -27,6 +27,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Verifier.Htt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Verifier.HttpApi.Host", "src\TelegramServer.Verifier.HttpApi.Host\TelegramServer.Verifier.HttpApi.Host.csproj", "{17FB4E5C-7736-4FE3-9FFE-361649225B6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Auth.Application", "src\TelegramServer.Auth.Application\TelegramServer.Auth.Application.csproj", "{4C5824A8-E968-497D-9326-6613CF616F5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Auth.Application.Contracts", "src\TelegramServer.Auth.Application.Contracts\TelegramServer.Auth.Application.Contracts.csproj", "{EEACBCAB-A4DD-4920-8D97-1A998BF41DB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Auth.Domain", "src\TelegramServer.Auth.Domain\TelegramServer.Auth.Domain.csproj", "{61ABF256-A155-49B6-BFA9-ADB1AC180B6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramServer.Auth.Domain.Shared", "src\TelegramServer.Auth.Domain.Shared\TelegramServer.Auth.Domain.Shared.csproj", "{7F1E881E-537B-4EE4-A009-050CA2C59B70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +81,22 @@ Global
 		{17FB4E5C-7736-4FE3-9FFE-361649225B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17FB4E5C-7736-4FE3-9FFE-361649225B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17FB4E5C-7736-4FE3-9FFE-361649225B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C5824A8-E968-497D-9326-6613CF616F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C5824A8-E968-497D-9326-6613CF616F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C5824A8-E968-497D-9326-6613CF616F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C5824A8-E968-497D-9326-6613CF616F5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEACBCAB-A4DD-4920-8D97-1A998BF41DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEACBCAB-A4DD-4920-8D97-1A998BF41DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEACBCAB-A4DD-4920-8D97-1A998BF41DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEACBCAB-A4DD-4920-8D97-1A998BF41DB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61ABF256-A155-49B6-BFA9-ADB1AC180B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61ABF256-A155-49B6-BFA9-ADB1AC180B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61ABF256-A155-49B6-BFA9-ADB1AC180B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61ABF256-A155-49B6-BFA9-ADB1AC180B6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1E881E-537B-4EE4-A009-050CA2C59B70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1E881E-537B-4EE4-A009-050CA2C59B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1E881E-537B-4EE4-A009-050CA2C59B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1E881E-537B-4EE4-A009-050CA2C59B70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +112,10 @@ Global
 		{AA8F1E23-79A7-4E82-9B76-FE470A7EC7A9} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{A10398AD-83F2-4BC3-B6D8-FEE40894F816} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{17FB4E5C-7736-4FE3-9FFE-361649225B6F} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{4C5824A8-E968-497D-9326-6613CF616F5B} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{EEACBCAB-A4DD-4920-8D97-1A998BF41DB5} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{61ABF256-A155-49B6-BFA9-ADB1AC180B6E} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{7F1E881E-537B-4EE4-A009-050CA2C59B70} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

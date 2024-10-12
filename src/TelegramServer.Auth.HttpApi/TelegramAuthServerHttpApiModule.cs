@@ -7,7 +7,7 @@ using Volo.Abp.Modularity;
 namespace TelegramServer.Auth;
 
 [DependsOn(
-    typeof(TelegramServerApplicationModule),
+    typeof(TelegramServerAuthApplicationModule),
     typeof(AbpAspNetCoreMvcModule)
 )]
 public class TelegramAuthServerHttpApiModule : AbpModule

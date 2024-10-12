@@ -27,9 +27,9 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\TelegramServer.Application.Contracts\TelegramServer.Application.Contracts.csproj" />
-      <ProjectReference Include="..\TelegramServer.Application\TelegramServer.Application.csproj" />
-      <ProjectReference Include="..\TelegramServer.Domain\TelegramServer.Domain.csproj" />
+      <ProjectReference Include="..\TelegramServer.Auth.Application.Contracts\TelegramServer.Auth.Application.Contracts.csproj" />
+      <ProjectReference Include="..\TelegramServer.Auth.Application\TelegramServer.Auth.Application.csproj" />
+      <ProjectReference Include="..\TelegramServer.Auth.Domain\TelegramServer.Auth.Domain.csproj" />
       <ProjectReference Include="..\TelegramServer.Auth.HttpApi\TelegramServer.Auth.HttpApi.csproj" />
     </ItemGroup>
     

@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TelegramServer.Application.Contracts\TelegramServer.Application.Contracts.csproj" />
-    <ProjectReference Include="..\TelegramServer.Application\TelegramServer.Application.csproj" />
-    <ProjectReference Include="..\TelegramServer.Domain.Shared\TelegramServer.Domain.Shared.csproj" />
+    <ProjectReference Include="..\TelegramServer.Auth.Application.Contracts\TelegramServer.Auth.Application.Contracts.csproj" />
+    <ProjectReference Include="..\TelegramServer.Auth.Application\TelegramServer.Auth.Application.csproj" />
+    <ProjectReference Include="..\TelegramServer.Auth.Domain.Shared\TelegramServer.Auth.Domain.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using TelegramServer.Common;
 using Volo.Abp.DependencyInjection;
 
@@ -25,6 +26,7 @@ public class JwtTokenPrivateKeyProvider : IJwtTokenPrivateKeyProvider, ISingleto
     public string LoadPrivateKey()
     {
         _logger.LogInformation("Wait for the input of the key....");
+        Log.Information("Wait for the input of the key.... From Log");
         Task.Delay(1000);
         Console.WriteLine();
 

@@ -9,7 +9,7 @@ namespace TelegramServer.Auth;
 
 public class Program
 {
-    public async static Task<int> Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")

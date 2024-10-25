@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Serilog;
 using TelegramServer.Common;
 using Volo.Abp.DependencyInjection;
 
@@ -25,6 +26,7 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
     public JObject LoadToken()
     {
         _logger.LogInformation("Wait for the input of the token....");
+        Log.Information("Wait for the input of the key.... From Log");
         Task.Delay(1000);
         Console.WriteLine();
 
@@ -40,7 +42,7 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
         return token;
     }
 
-    private JObject InputAndCheckKey()
+    private static JObject InputAndCheckKey()
     {
         try
         {
@@ -54,11 +56,7 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
                 return null;
             }
 
-            if (!IsValidJson(key))
-            {
-                return null;
-            }
-            return JObject.Parse(key);
+            return !IsValidJson(key) ? null : JObject.Parse(key);
         }
         catch (Exception e)
         {
@@ -67,7 +65,7 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
         }
     }
     
-    private bool IsValidJson(string strInput)
+    private static bool IsValidJson(string strInput)
     {
         if (string.IsNullOrWhiteSpace(strInput))
         {
@@ -76,10 +74,10 @@ public class TelegramTokenProvider : ITelegramTokenProvider, ISingletonDependenc
         strInput = strInput.Trim();
         try
         {
-            var obj = JsonConvert.DeserializeObject(strInput);
+            JsonConvert.DeserializeObject(strInput);
             return true;
         }
-        catch
+        catch (Exception)
         {
             return false;
         }

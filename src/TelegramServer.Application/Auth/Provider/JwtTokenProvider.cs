@@ -30,7 +30,14 @@ public class JwtTokenProvider : IJwtTokenProvider, ISingletonDependency
     {
         _logger = logger;
         _jwtTokenOptions = jwtTokenOptions.Value;
-        _key = jwtTokenPrivateKeyProvider.LoadPrivateKey();
+        if (null != _jwtTokenOptions?.Token)
+        {
+            _key = _jwtTokenOptions.Token;
+        }
+        else
+        {
+            _key = jwtTokenPrivateKeyProvider.LoadPrivateKey();
+        }
     }
 
     public Task<JwkDto> GenerateJwkAsync()

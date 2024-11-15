@@ -32,6 +32,7 @@ public class TelegramAuthServerHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
         Configure<TelegramAuthOptions>(configuration.GetSection("TelegramAuth"));
+        Configure<TelegramTokenOptions>(configuration.GetSection("TelegramToken"));
         Configure<RealIpOptions>(configuration.GetSection("RealIp"));
         ConfigureConventionalControllers();
         ConfigureLocalization();

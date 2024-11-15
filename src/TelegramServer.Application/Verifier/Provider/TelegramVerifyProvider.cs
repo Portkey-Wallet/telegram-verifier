@@ -42,14 +42,38 @@ public class TelegramVerifyProvider : ISingletonDependency, ITelegramVerifyProvi
     private readonly INESTRepository<TelegramBotIndex, Guid> _telegramBotRepository;
 
     public TelegramVerifyProvider(ILogger<TelegramVerifyProvider> logger,
-        IOptions<TelegramAuthOptions> telegramAuthOptions, ITelegramTokenProvider telegramTokenProvider,
+        IOptions<TelegramAuthOptions> telegramAuthOptions, IOptions<TelegramTokenOptions> telegramTokenOptions, ITelegramTokenProvider telegramTokenProvider,
         INESTRepository<TelegramBotIndex, Guid> telegramBotRepository)
     {
         _logger = logger;
         _telegramAuthOptions = telegramAuthOptions.Value;
-        _token = telegramTokenProvider.LoadToken();
+        JObject token = GetTokenFromConfig(telegramTokenOptions.Value);
+        if (null != token)
+        {
+            _token = token;
+        }
+        else
+        {
+            _token = telegramTokenProvider.LoadToken();
+        }
         _defaultPortkeyRobotId = "portkey-tg-robot";
         _telegramBotRepository = telegramBotRepository;
+    }
+
+    private JObject GetTokenFromConfig(TelegramTokenOptions tokenOptions)
+    {
+        if (tokenOptions == null || tokenOptions.Tokens == null || tokenOptions.Tokens.Count == 0)
+        {
+            return null;
+        }
+
+        JObject token = new JObject();
+        foreach (var tPair in tokenOptions.Tokens)
+        {
+            token[tPair.Key.Trim()] = tPair.Value.Trim();
+        }
+
+        return token;
     }
 
     public async Task<string> GenerateHashAsync(TelegramAuthDataDto telegramAuthDataDto)
